@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System;
+using System.Text;
 
 namespace Net_Core_3._1_Speed_Test
 {
@@ -10,7 +11,7 @@ namespace Net_Core_3._1_Speed_Test
     {
         static void Main(string[] args) 
         {
-            var summary = BenchmarkRunner.Run<StringStartsWith>();
+            var summary = BenchmarkRunner.Run<ChainStringsWithStringBuilder>();
         }
 
 
@@ -30,6 +31,24 @@ namespace Net_Core_3._1_Speed_Test
                 alphabetWithNumbers.StartsWith("abcdefghijklmnopqrstuvwxyzåäö1234567890");
             }
         }  
+    }
+
+    [RPlotExporter, RankColumn]
+    public class ChainStringsWithStringBuilder
+    {
+        int totalItems = 10000000;
+
+        [Benchmark]
+        public string ChainStringsExecution()
+        {
+            var stringBuilder = new StringBuilder();
+
+            for (int i = 0; i < totalItems; i++)
+            {
+                stringBuilder.Append("How much time is this gonna take?" + i);
+            }
+            return stringBuilder.ToString();
+        }
     }
 
 
