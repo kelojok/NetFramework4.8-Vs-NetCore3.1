@@ -1,6 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using System;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Net_Core_3._1_Speed_Test
@@ -11,7 +12,7 @@ namespace Net_Core_3._1_Speed_Test
     {
         static void Main(string[] args) 
         {
-            var summary = BenchmarkRunner.Run<ChainStringsWithStringBuilder>();
+            var summary = BenchmarkRunner.Run<Sha256Test>();
         }
 
 
@@ -49,6 +50,21 @@ namespace Net_Core_3._1_Speed_Test
             }
             return stringBuilder.ToString();
         }
+    }
+
+    public class Sha256Test
+    {
+        private readonly byte[] data;
+
+        private readonly SHA256 sha256 = SHA256.Create();
+
+        public Sha256Test()
+        {
+            data = new byte[10000];
+        }
+
+        [Benchmark]
+        public byte[] Sha256() => sha256.ComputeHash(data);
     }
 
 
